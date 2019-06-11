@@ -1,15 +1,12 @@
 
 {.deadCodeElim: on.}
 
-when defined(windows): 
-  const 
-    libsnappy* = "libsnappy.dll"
-elif defined(macosx): 
-  const 
-    libsnappy* = "libsnappy.dylib"
-else: 
-  const 
-    libsnappy* = "libsnappy.so.1"
+when defined(windows):
+  const libsnappy* = "libsnappy.dll"
+elif defined(macosx):
+  const libsnappy* = "libsnappy.dylib"
+else:
+  const libsnappy* = "libsnappy.so.1"
 
 type
   snappy_status* {.size: sizeof(cint).} = enum
@@ -28,13 +25,13 @@ proc snappy_compress*(input: cstring;
     importc: "snappy_compress", dynlib: libsnappy.} ##\
     ##Takes the data stored in "input[0..input_length-1]" and stores
     ##it in the array pointed to by "compressed".
-    ## 
+    ##
     ##<compressed_length> signals the space available in "compressed".
     ##If it is not at least equal to "snappy_max_compressed_length(input_length)",
     ##`SNAPPY_BUFFER_TOO_SMALL` is returned. After successful compression,
     ##<compressed_length> contains the true length of the compressed output,
     ##and `SNAPPY_OK` is returned.
-    
+
 proc snappy_uncompress*(compressed: cstring;
                         compressed_length: csize;
                         uncompressed: cstring;
@@ -46,13 +43,13 @@ proc snappy_uncompress*(compressed: cstring;
     ##  uncompressed[0..uncompressed_length-1].
     ##Returns failure (a value not equal to SNAPPY_OK) if the message
     ##is corrupted and could not be decrypted.
-    ## 
+    ##
     ##<uncompressed_length> signals the space available in "uncompressed".
     ##If it is not at least equal to the value returned by
     ##snappy_uncompressed_length for this stream, SNAPPY_BUFFER_TOO_SMALL
     ##is returned. After successful decompression, <uncompressed_length>
     ##contains the true length of the decompressed output.
- 
+
 proc snappy_max_compressed_length*(source_length: csize): csize {.cdecl,
     importc: "snappy_max_compressed_length", dynlib: libsnappy.} ##\
     ##Returns the maximal size of the compressed representation of
@@ -82,18 +79,18 @@ proc snappy_validate_compressed_buffer*(compressed: cstring;
 
 type
   SnappyException* = object of Exception
-    
+
 proc compress*(input:string):string =
   ## Compress a string using snappy.
   var
-    output_length = snappy_max_compressed_length(input.len) 
+    output_length = snappy_max_compressed_length(input.len)
     output = newString(output_length)
-  
+
   let status = snappy_compress(input,
                                input.len,
                                output,
                                addr(output_length))
-  
+
   if status != snappy_status.SNAPPY_OK:
     raise newException(SnappyException,$status)
 
@@ -102,7 +99,7 @@ proc compress*(input:string):string =
   # bound the the length
   output.setLen(output_length)
   result = output
-  
+
 proc uncompress*(input:string):string =
   ## Uncompress a string. The input string has to be
   ## a string compressed by `snappy`
@@ -110,7 +107,7 @@ proc uncompress*(input:string):string =
   if can_uncompress != snappy_status.SNAPPY_OK:
     raise newException(SnappyException,
                        "Malformed compressed input: " & $can_uncompress)
-  
+
   var
     output_length:int = 0
     status = snappy_uncompressed_length(input,
