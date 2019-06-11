@@ -1,4 +1,8 @@
-# nimsnappy
+![Snappy Logo](docs/snappyLogo.png)
+
+# Snappy
+
+Forked from on: https://github.com/dfdeshom/nimsnappy
 
 Nim wrapper for the `snappy` compression library. there is also a high-level
 API to for easy usage. The two functions exposed are `compress` and
@@ -13,3 +17,4 @@ var compress = compress(input)
 var decompress = uncompress(compress)
 echo decompress
 ```
+
