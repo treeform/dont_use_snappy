@@ -18,3 +18,49 @@ var decompress = uncompress(compress)
 echo decompress
 ```
 
+
+# API: snappy
+
+```nim
+import snappy
+```
+
+## **type** SnappyException
+
+
+```nim
+SnappyException = object of Exception
+```
+
+## **proc** compress
+
+Compress a string using snappy.
+
+```nim
+proc compress(input: string): string {.raises: [SnappyException].}
+```
+
+## **proc** compress
+
+Compress a byte array.
+
+```nim
+proc compress(input: seq[uint8]): seq[uint8] {.raises: [SnappyException].}
+```
+
+## **proc** uncompress
+
+Uncompress a string
+
+```nim
+proc uncompress(input: string): string {.raises: [SnappyException].}
+```
+
+## **proc** uncompress
+
+Uncompress a byte array.
+
+```nim
+proc uncompress(input: seq[uint8]): seq[uint8] {.raises: [SnappyException].}
+```
+
