@@ -5,5 +5,7 @@ author        = "didier deshommes"
 description   = "Snappy lib wrapper for Nim"
 license       = "BSD-3"
 
+srcDir = "src"
+
 [Deps]
 Requires: "nim >= 0.20.0"
